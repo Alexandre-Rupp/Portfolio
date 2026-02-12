@@ -464,6 +464,7 @@ export default function PixelBlast({
     let composer: EffectComposer | null = null;
     let touchTexture: TouchTexture | null = null;
     let liquidEffect: Effect | null = null;
+    let noiseEffect: Effect | null = null;
 
     if (liquid || noiseAmount > 0) {
       composer = new EffectComposer(renderer);
@@ -487,7 +488,7 @@ export default function PixelBlast({
       noiseUniforms.set("uTime", new THREE.Uniform(0));
       noiseUniforms.set("uAmount", new THREE.Uniform(noiseAmount));
 
-      const noiseEffect = new Effect(
+      noiseEffect = new Effect(
         "NoiseEffect",
         `uniform float uTime; uniform float uAmount; float hash(vec2 p){ return fract(sin(dot(p, vec2(127.1,311.7))) * 43758.5453);} void mainUv(inout vec2 uv){} void mainImage(const in vec4 inputColor,const in vec2 uv,out vec4 outputColor){ float n=hash(floor(uv*vec2(1920.0,1080.0))+floor(uTime*60.0)); float g=(n-0.5)*uAmount; outputColor=inputColor+vec4(vec3(g),0.0);} `,
         {
@@ -581,17 +582,12 @@ export default function PixelBlast({
       }
 
       if (composer) {
-        composer.passes.forEach((pass) => {
-          const effectPass = pass as EffectPass & { effects?: Effect[] };
-          if (effectPass.effects) {
-            effectPass.effects.forEach((effect) => {
-              const uTime = effect.uniforms?.get("uTime") as THREE.IUniform<number> | undefined;
-              if (uTime) {
-                uTime.value = uniforms.uTime.value as number;
-              }
-            });
+        if (noiseEffect) {
+          const noiseTime = noiseEffect.uniforms?.get("uTime") as THREE.IUniform<number> | undefined;
+          if (noiseTime) {
+            noiseTime.value = uniforms.uTime.value as number;
           }
-        });
+        }
         composer.render();
       } else {
         renderer.render(scene, camera);
