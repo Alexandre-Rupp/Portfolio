@@ -248,7 +248,9 @@ export default function TargetCursor({
           rotation: normalized + 360,
           duration: spinDuration * (1 - normalized / 360),
           ease: "none",
-          onComplete: () => spinTlRef.current?.restart()
+          onComplete: () => {
+            spinTlRef.current?.restart();
+          }
         });
       }, 50);
 
