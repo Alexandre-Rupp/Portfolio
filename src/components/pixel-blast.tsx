@@ -356,13 +356,15 @@ function createLiquidEffect(texture: THREE.Texture, options?: { strength?: numbe
     }
   `;
 
+  const liquidUniforms = new Map<string, THREE.Uniform<THREE.Texture | number>>([
+    ["uTexture", new THREE.Uniform(texture)],
+    ["uStrength", new THREE.Uniform(options?.strength ?? 0.025)],
+    ["uTime", new THREE.Uniform(0)],
+    ["uFreq", new THREE.Uniform(options?.freq ?? 4.5)]
+  ]);
+
   return new Effect("LiquidEffect", fragment, {
-    uniforms: new Map([
-      ["uTexture", new THREE.Uniform(texture)],
-      ["uStrength", new THREE.Uniform(options?.strength ?? 0.025)],
-      ["uTime", new THREE.Uniform(0)],
-      ["uFreq", new THREE.Uniform(options?.freq ?? 4.5)]
-    ])
+    uniforms: liquidUniforms
   });
 }
 
@@ -482,14 +484,16 @@ export default function PixelBlast({
     }
 
     if (noiseAmount > 0 && composer) {
+      const noiseUniforms = new Map<string, THREE.Uniform<number>>([
+        ["uTime", new THREE.Uniform(0)],
+        ["uAmount", new THREE.Uniform(noiseAmount)]
+      ]);
+
       const noiseEffect = new Effect(
         "NoiseEffect",
         `uniform float uTime; uniform float uAmount; float hash(vec2 p){ return fract(sin(dot(p, vec2(127.1,311.7))) * 43758.5453);} void mainUv(inout vec2 uv){} void mainImage(const in vec4 inputColor,const in vec2 uv,out vec4 outputColor){ float n=hash(floor(uv*vec2(1920.0,1080.0))+floor(uTime*60.0)); float g=(n-0.5)*uAmount; outputColor=inputColor+vec4(vec3(g),0.0);} `,
         {
-          uniforms: new Map([
-            ["uTime", new THREE.Uniform(0)],
-            ["uAmount", new THREE.Uniform(noiseAmount)]
-          ])
+          uniforms: noiseUniforms
         }
       );
 
