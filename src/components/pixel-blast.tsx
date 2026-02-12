@@ -356,12 +356,11 @@ function createLiquidEffect(texture: THREE.Texture, options?: { strength?: numbe
     }
   `;
 
-  const liquidUniforms = new Map<string, THREE.Uniform<THREE.Texture | number>>([
-    ["uTexture", new THREE.Uniform(texture)],
-    ["uStrength", new THREE.Uniform(options?.strength ?? 0.025)],
-    ["uTime", new THREE.Uniform(0)],
-    ["uFreq", new THREE.Uniform(options?.freq ?? 4.5)]
-  ]);
+  const liquidUniforms = new Map<string, THREE.Uniform>();
+  liquidUniforms.set("uTexture", new THREE.Uniform(texture));
+  liquidUniforms.set("uStrength", new THREE.Uniform(options?.strength ?? 0.025));
+  liquidUniforms.set("uTime", new THREE.Uniform(0));
+  liquidUniforms.set("uFreq", new THREE.Uniform(options?.freq ?? 4.5));
 
   return new Effect("LiquidEffect", fragment, {
     uniforms: liquidUniforms
@@ -484,10 +483,9 @@ export default function PixelBlast({
     }
 
     if (noiseAmount > 0 && composer) {
-      const noiseUniforms = new Map<string, THREE.Uniform<number>>([
-        ["uTime", new THREE.Uniform(0)],
-        ["uAmount", new THREE.Uniform(noiseAmount)]
-      ]);
+      const noiseUniforms = new Map<string, THREE.Uniform>();
+      noiseUniforms.set("uTime", new THREE.Uniform(0));
+      noiseUniforms.set("uAmount", new THREE.Uniform(noiseAmount));
 
       const noiseEffect = new Effect(
         "NoiseEffect",
