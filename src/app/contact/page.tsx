@@ -8,7 +8,7 @@ export default function ContactPage() {
 
       <header className="section-hero">
         <p className="eyebrow">Contact</p>
-        <h1>Entrer En Contact</h1>
+        <h1>Me Contacter</h1>
         <p>
           Disponible pour échanger autour de projets, alternances et opportunités en
           infrastructure, réseau, sécurité et développement.

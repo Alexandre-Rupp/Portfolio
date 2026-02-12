@@ -19,7 +19,7 @@ const body = Barlow({
 });
 
 export const metadata: Metadata = {
-  title: "Portfolio Futuriste",
+  title: "Portfolio Alexandre Rupp",
   description: "Portfolio informatique en quatre pages : menu, développement, infrastructure et DevOps"
 };
 
