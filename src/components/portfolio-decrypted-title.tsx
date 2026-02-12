@@ -9,7 +9,7 @@ export default function PortfolioDecryptedTitle() {
   const [canAnimate, setCanAnimate] = useState(false);
 
   useEffect(() => {
-    let timerId: ReturnType<typeof setTimeout> | null = null;
+    let timerId: number | null = null;
 
     const startAfterDelay = () => {
       timerId = window.setTimeout(() => setCanAnimate(true), 20);
